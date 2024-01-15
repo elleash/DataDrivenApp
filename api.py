@@ -23,22 +23,24 @@ main.iconphoto(False, ImageTk.PhotoImage(file = 'pokeball1.png')) # changed the 
 # function to get API data
 def get_url(func):
     # assign the fetched data as a global variable that can be used outside the function
-    global poke_data
     global response
     url = f"https://pokeapi.co/api/v2/pokemon/{func}" # link the API via URL
     response = requests.get(url) # request to get the data
-    # write the data to the json file
-    poke_data = response.json()
-    with open("poke.json", "w") as file:
-        json.dump(poke_data,file,indent=4)
 
 # function to link the user's entry to the API
 def get_pokemon_info():
+    global poke_data
     poke_entry = entry.get() # gathers the user's input
     pokename = Pokemon(poke_entry) # class object with assigned entry value
+
     get_url(pokename.name) # calls the function for the url with assigned parameter
+
     # a condition to call the validate_pokemon function and check the user's entry
     if response.status_code == 200:
+        # write the data to the json file
+        poke_data = response.json()
+        with open("poke.json", "w") as file:
+            json.dump(poke_data,file,indent=4)
         info_one() # displays the pokemon's information
     else:
         messagebox.showerror('ERROR','POKEMON NOT FOUND!') # an error message will appear if the function returns false
